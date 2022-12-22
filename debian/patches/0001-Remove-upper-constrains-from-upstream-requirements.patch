@@ -1,0 +1,21 @@
+From 9e609af6caea5996d6b0f7e5a6b9872dc18b3800 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ond=C5=99ej=20Nov=C3=BD?= <onovy@debian.org>
+Date: Thu, 3 Nov 2016 21:43:46 +0100
+Subject: Remove upper constrains from upstream requirements
+
+=== modified file 'setup.cfg'
+--- a/setup.cfg
++++ b/setup.cfg
+@@ -36,9 +36,9 @@
+ 	=src
+ packages = find:
+ install_requires = 
+-	pyflakes >= 2.2.0, < 2.3.0
+-	pycodestyle >= 2.6.0a1, < 2.7.0
+-	mccabe >= 0.6.0, < 0.7.0
++	pyflakes >= 2.2.0
++	pycodestyle >= 2.6.0a1
++	mccabe >= 0.6.0
+ 	enum34; python_version<"3.4"
+ 	typing; python_version<"3.5"
+ 	configparser; python_version<"3.2"
