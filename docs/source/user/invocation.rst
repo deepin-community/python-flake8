@@ -14,25 +14,25 @@ like so:
 
 Where you simply allow the shell running in your terminal to locate |Flake8|.
 In some cases, though, you may have installed |Flake8| for multiple versions
-of Python (e.g., Python 2.7 and Python 3.5) and you need to call a specific
+of Python (e.g., Python 3.8 and Python 3.9) and you need to call a specific
 version. In that case, you will have much better results using:
 
 .. prompt:: bash
 
-    python2.7 -m flake8
+    python3.8 -m flake8
 
 Or
 
 .. prompt:: bash
 
-    python3.5 -m flake8
+    python3.9 -m flake8
 
 Since that will tell the correct version of Python to run |Flake8|.
 
 .. note::
 
-    Installing |Flake8| once will not install it on both Python 2.7 and
-    Python 3.5. It will only install it for the version of Python that
+    Installing |Flake8| once will not install it on both Python 3.8 and
+    Python 3.9. It will only install it for the version of Python that
     is running pip.
 
 It is also possible to specify command-line options directly to |Flake8|:
@@ -98,7 +98,8 @@ And you should see something like:
                             unified diff provided on standard in by the user.
       --exclude=patterns    Comma-separated list of files or directories to
                             exclude.(Default:
-                            .svn,CVS,.bzr,.hg,.git,__pycache__,.tox)
+                            .svn,CVS,.bzr,.hg,.git,__pycache__,.tox,.nox,.eggs,
+                            *.egg)
       --filename=patterns   Only check for filenames matching the patterns in this
                             comma-separated list. (Default: *.py)
       --format=format       Format errors according to the chosen formatter.
@@ -115,6 +116,10 @@ And you should see something like:
                             run. (Default: 79)
       --select=errors       Comma-separated list of errors and warnings to enable.
                             For example, ``--select=E4,E51,W234``. (Default: )
+      --extend-select errors
+                            Comma-separated list of errors and warnings to add to
+                            the list of selected ones. For example, ``--extend-
+                            select=E4,E51,W234``.
       --disable-noqa        Disable the effect of "# noqa". This will report
                             errors on lines with "# noqa" at the end.
       --show-source         Show the source generate each error or warning.

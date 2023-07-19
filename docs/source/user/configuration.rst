@@ -24,36 +24,12 @@ Remember that you want to specify certain options without writing
 Configuration Locations
 =======================
 
-|Flake8| supports storing its configuration in the following places:
-
-- Your top-level user directory
-
-- In your project in one of ``setup.cfg``, ``tox.ini``, or ``.flake8``.
+|Flake8| supports storing its configuration in your project in one of
+``setup.cfg``, ``tox.ini``, or ``.flake8``.
 
 Values set at the command line have highest priority, then those in the
-project configuration file, then those in your user directory, and finally
-there are the defaults. However, there are additional command line options
-which can alter this.
-
-
-"User" Configuration
---------------------
-
-|Flake8| allows a user to use "global" configuration file to store preferences.
-The user configuration file is expected to be stored somewhere in the user's
-"home" directory.
-
-- On Windows the "home" directory will be something like
-  ``C:\\Users\sigmavirus24``, a.k.a, ``~\``.
-
-- On Linux and other Unix like systems (including OS X) we will look in
-  ``~/``.
-
-Note that |Flake8| looks for ``~\.flake8`` on Windows and ``~/.config/flake8``
-on Linux and other Unix systems.
-
-User configuration files use the same syntax as Project Configuration files.
-Keep reading to see that syntax.
+project configuration file, and finally there are the defaults. However,
+there are additional command line options which can alter this.
 
 
 Project Configuration
@@ -204,7 +180,6 @@ look at a portion of a project's Flake8 configuration in their ``tox.ini``:
 
     [flake8]
     # it's not a bug that we aren't using all of hacking, ignore:
-    # F812: list comprehension redefines ...
     # H101: Use TODO(NAME)
     # H202: assertRaises Exception too broad
     # H233: Python 3.x incompatible use of print operator
@@ -215,7 +190,7 @@ look at a portion of a project's Flake8 configuration in their ``tox.ini``:
     # H404: multi line docstring should start without a leading new line
     # H405: multi line docstring summary not separated with an empty line
     # H501: Do not use self.__dict__ for string formatting
-    ignore = F812,H101,H202,H233,H301,H306,H401,H403,H404,H405,H501
+    ignore = H101,H202,H233,H301,H306,H401,H403,H404,H405,H501
 
 They use the comments to describe the check but they could also write this as:
 
@@ -224,8 +199,6 @@ They use the comments to describe the check but they could also write this as:
     [flake8]
     # it's not a bug that we aren't using all of hacking
     ignore =
-        # F812: list comprehension redefines ...
-        F812,
         # H101: Use TODO(NAME)
         H101,
         # H202: assertRaises Exception too broad

@@ -1,16 +1,6 @@
-pyflakes<2.3.0,>=2.2.0
-pycodestyle<2.7.0,>=2.6.0a1
-mccabe<0.7.0,>=0.6.0
-
-[:python_version < "3.2"]
-configparser
-functools32
-
-[:python_version < "3.4"]
-enum34
-
-[:python_version < "3.5"]
-typing
+mccabe<0.8.0,>=0.7.0
+pycodestyle<2.10.0,>=2.9.0
+pyflakes<2.6.0,>=2.5.0
 
 [:python_version < "3.8"]
-importlib-metadata
+importlib-metadata<4.3,>=1.1.0

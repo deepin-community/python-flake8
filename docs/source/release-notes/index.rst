@@ -5,10 +5,30 @@
 All of the release notes that have been recorded for Flake8 are organized here
 with the newest releases first.
 
+5.x Release Series
+==================
+
+.. toctree::
+   5.0.4
+   5.0.3
+   5.0.2
+   5.0.1
+   5.0.0
+
+4.x Release Series
+==================
+
+.. toctree::
+   4.0.1
+   4.0.0
+
 3.x Release Series
 ==================
 
 .. toctree::
+    3.9.2
+    3.9.1
+    3.9.0
     3.8.4
     3.8.3
     3.8.2

@@ -40,6 +40,8 @@ Index of Options
 
 - :option:`flake8 --quiet`
 
+- :option:`flake8 --color`
+
 - :option:`flake8 --count`
 
 - :option:`flake8 --diff`
@@ -64,7 +66,11 @@ Index of Options
 
 - :option:`flake8 --max-doc-length`
 
+- :option:`flake8 --indent-size`
+
 - :option:`flake8 --select`
+
+- :option:`flake8 --extend-select`
 
 - :option:`flake8 --disable-noqa`
 
@@ -72,11 +78,11 @@ Index of Options
 
 - :option:`flake8 --statistics`
 
+- :option:`flake8 --require-plugins`
+
 - :option:`flake8 --enable-extensions`
 
 - :option:`flake8 --exit-zero`
-
-- :option:`flake8 --install-hook`
 
 - :option:`flake8 --jobs`
 
@@ -179,6 +185,35 @@ Options and their Descriptions
 
         quiet = 1
 
+.. option:: --color
+
+    :ref:`Go back to index <top>`
+
+    Whether to use color in output. Defaults to ``auto``.
+
+    Possible options are ``auto``, ``always``, and ``never``.
+
+    This **can** be specified in config files.
+
+    When color is enabled, the following substitutions are enabled:
+
+    - ``%(bold)s``
+    - ``%(black)s``
+    - ``%(red)s``
+    - ``%(green)s``
+    - ``%(yellow)s``
+    - ``%(blue)s``
+    - ``%(magenta)s``
+    - ``%(cyan)s``
+    - ``%(white)s``
+    - ``%(reset)s``
+
+    Example config file usage:
+
+    .. code-block:: ini
+
+        color = never
+
 
 .. option:: --count
 
@@ -205,6 +240,11 @@ Options and their Descriptions
 
     :ref:`Go back to index <top>`
 
+    .. warning::
+
+        Due to hiding potential errors, this option is deprecated and will be
+        removed in a future version.
+
     Use the unified diff provided on standard in to only check the modified
     files and report errors included in the diff.
 
@@ -223,7 +263,7 @@ Options and their Descriptions
 
     Provide a comma-separated list of glob patterns to exclude from checks.
 
-    This defaults to: ``.svn,CVS,.bzr,.hg,.git,__pycache__,.tox,.eggs,*.egg``
+    This defaults to: ``.svn,CVS,.bzr,.hg,.git,__pycache__,.tox,.nox,.eggs,*.egg``
 
     Example patterns:
 
@@ -528,9 +568,9 @@ Options and their Descriptions
 
         # https://some-super-long-domain-name.com/with/some/very/long/path
 
-        url = (
-            'http://...'
-        )
+        url = '''\
+            https://...
+        '''
 
     This defaults to: ``79``
 
@@ -570,6 +610,27 @@ Options and their Descriptions
 
         max-doc-length = 79
 
+.. option:: --indent-size=<n>
+
+    :ref:`Go back to index <top>`
+
+    Set the number of spaces used for indentation.
+
+    By default, 4.
+
+    Command-line example:
+
+    .. prompt:: bash
+
+        flake8 --indent-size 2 dir/
+
+    This **can** be specified in config files.
+
+    Example config file usage:
+
+    .. code-block:: ini
+
+        indent-size = 2
 
 .. option:: --select=<errors>
 
@@ -609,6 +670,38 @@ Options and their Descriptions
             E431,
             W,
             F
+
+
+.. option:: --extend-select=<errors>
+
+    :ref:`Go back to index <top>`
+
+    .. versionadded:: 4.0.0
+
+    Specify a list of codes to add to the list of selected ones. Similar
+    considerations as in :option:`--select` apply here with regard to the
+    value.
+
+    The difference to the :option:`--select` option is, that this option can be
+    used to selectively add individual codes without overriding the default
+    list entirely.
+
+    Command-line example:
+
+    .. prompt:: bash
+
+        flake8 --extend-select=E4,E51,W234 dir/
+
+    This **can** be specified in config files.
+
+    Example config file usage:
+
+    .. code-block:: ini
+
+        extend-select =
+            E4,
+            E51,
+            W234
 
 
 .. option:: --disable-noqa
@@ -681,6 +774,32 @@ Options and their Descriptions
         statistics = True
 
 
+.. option:: --require-plugins=<names>
+
+    :ref:`Go back to index <top>`
+
+    Require specific plugins to be installed before running.
+
+    This option takes a list of distribution names (usually the name you would
+    use when running ``pip install``).
+
+    Command-line example:
+
+    .. prompt:: bash
+
+        flake8 --require-plugins=flake8-2020,flake8-typing-extensions dir/
+
+    This **can** be specified in config files.
+
+    Example config file usage:
+
+    .. code-block:: ini
+
+        require-plugins =
+            flake8-2020
+            flake8-typing-extensions
+
+
 .. option:: --enable-extensions=<errors>
 
     :ref:`Go back to index <top>`
@@ -688,8 +807,8 @@ Options and their Descriptions
     Enable off-by-default extensions.
 
     Plugins to |Flake8| have the option of registering themselves as
-    off-by-default. These plugins effectively add themselves to the
-    default ignore list.
+    off-by-default. These plugins will not be loaded unless enabled by this
+    option.
 
     Command-line example:
 
@@ -728,28 +847,6 @@ Options and their Descriptions
     This **can not** be specified in config files.
 
 
-.. option:: --install-hook=VERSION_CONTROL_SYSTEM
-
-    :ref:`Go back to index <top>`
-
-    Install a hook for your version control system that is executed before
-    or during commit.
-
-    The available options are:
-
-    - git
-    - mercurial
-
-    Command-line usage:
-
-    .. prompt:: bash
-
-        flake8 --install-hook=git
-        flake8 --install-hook=mercurial
-
-    This **can not** be specified in config files.
-
-
 .. option:: --jobs=<n>
 
     :ref:`Go back to index <top>`
@@ -759,8 +856,8 @@ Options and their Descriptions
 
     .. note::
 
-        This option is ignored on Windows because :mod:`multiprocessing` does
-        not support Windows across all supported versions of Python.
+        This option is ignored on platforms where ``fork`` is not a
+        supported ``multiprocessing`` method.
 
     This defaults to: ``auto``
 
@@ -795,15 +892,6 @@ Options and their Descriptions
         flake8 --output-file=output.txt dir/
         flake8 -vv --output-file=output.txt dir/
 
-    This **can** be specified in config files.
-
-    Example config file usage:
-
-    .. code-block:: ini
-
-        output-file = output.txt
-        output_file = output.txt
-
 
 .. option:: --tee
 
@@ -823,7 +911,6 @@ Options and their Descriptions
 
     .. code-block:: ini
 
-        output-file = output.txt
         tee = True
 
 
@@ -973,7 +1060,7 @@ Options and their Descriptions
 
     .. prompt:: bash
 
-        flake8 --exclude-in-doctest=dir/subdir/file.py,dir/other/file.py dir/
+        flake8 --exclude-from-doctest=dir/subdir/file.py,dir/other/file.py dir/
 
     This **can** be specified in config files.
 
@@ -981,10 +1068,10 @@ Options and their Descriptions
 
     .. code-block:: ini
 
-        exclude-in-doctest =
+        exclude-from-doctest =
             dir/subdir/file.py,
             dir/other/file.py
-        exclude_in_doctest =
+        exclude_from_doctest =
             dir/subdir/file.py,
             dir/other/file.py
 

@@ -28,9 +28,9 @@ Historically, |Flake8| has generated major releases for:
 
 - Unvendoring dependencies (2.0)
 
-- Large scale refactoring (2.0, 3.0)
+- Large scale refactoring (2.0, 3.0, 5.0)
 
-- Subtly breaking CLI changes (3.0)
+- Subtly breaking CLI changes (3.0, 4.0, 5.0)
 
 - Breaking changes to its plugin interface (3.0)
 
@@ -74,20 +74,18 @@ we can do to help you in those cases.
 Process
 =======
 
-To prepare a release, we create a file in :file:`docs/source/releases/` named:
-``{{ release_number }}.rst`` (e.g., ``3.0.0.rst``). We note bug fixes,
+To prepare a release, we create a file in :file:`docs/source/release-notes/`
+named: ``{{ release_number }}.rst`` (e.g., ``3.0.0.rst``). We note bug fixes,
 improvements, and dependency version changes as well as other items of note
 for users.
 
 Before releasing, the following tox test environments must pass:
 
-- Python 2.7 (a.k.a., ``tox -e py27``)
-
 - Python 3.6 (a.k.a., ``tox -e py36``)
 
 - Python 3.7 (a.k.a., ``tox -e py37``)
 
-- PyPy (a.k.a., ``tox -e pypy``)
+- PyPy 3 (a.k.a., ``tox -e pypy3``)
 
 - Linters (a.k.a., ``tox -e linters``)
 

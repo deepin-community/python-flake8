@@ -1,3 +1,73 @@
+python-flake8 (5.0.4-4) unstable; urgency=medium
+
+  * Team upload.
+
+  [ Debian Janitor ]
+  * Update standards version to 4.6.1, no changes needed.
+
+  [ Jochen Sprickerhof ]
+  * Add upstream commit for pycodestyle 2.10
+
+ -- Jochen Sprickerhof <jspricke@debian.org>  Fri, 30 Dec 2022 07:54:07 +0100
+
+python-flake8 (5.0.4-3) UNRELEASED; urgency=medium
+
+  * Update standards version to 4.6.1, no changes needed.
+
+ -- Debian Janitor <janitor@jelmer.uk>  Sat, 10 Sep 2022 10:41:36 -0000
+
+python-flake8 (5.0.4-2) unstable; urgency=medium
+
+  * Team upload.
+  * This version of python-flake8 breaks python3-pytest-flake8 before 1.1.1.
+    Update versioned Breaks accordingly.
+
+ -- Emanuele Rocca <ema@debian.org>  Sat, 10 Sep 2022 11:45:56 +0200
+
+python-flake8 (5.0.4-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+  * Bump versioned Build-depends on python3-codestyle to >=2.9.0 and
+    python3-pyflakes >=2.5.0 due to new upstream release requirements.
+  * Update 0001-Remove-upper-constrains-from-upstream-requirements.patch.
+  * Drop build-depend on python3-nose (Closes: #1018493)
+  * Skip upstream test test_up_to_date from
+    tests/unit/plugins/pycodestyle_test.py as we do not autogenerate
+    pycodestyle.py but rather use the version shipped by upstream.
+  * Update Homepage field in d/control to point to
+    https://github.com/pycqa/flake8.
+
+ -- Emanuele Rocca <ema@debian.org>  Fri, 02 Sep 2022 10:49:28 +0200
+
+python-flake8 (4.0.1-2) unstable; urgency=medium
+
+  * Team upload.
+  * Add Breaks on python3-flake8-polyfill and python3-pytest-flake8
+
+ -- Scott Talbert <swt@techie.net>  Mon, 21 Feb 2022 13:43:08 -0500
+
+python-flake8 (4.0.1-1) unstable; urgency=medium
+
+  * Team upload.
+  [ Debian Janitor ]
+  * Remove constraints unnecessary since buster:
+    + flake8: Drop versioned constraint on python-flake8 in Replaces.
+    + flake8: Drop versioned constraint on python-flake8 in Breaks.
+  * Update standards version to 4.5.1, no changes needed.
+  * Remove constraints unnecessary since buster:
+    + Build-Depends: Drop versioned constraint on python3-entrypoints,
+      python3-mccabe, python3-mock and python3-setuptools.
+    + python3-flake8: Drop versioned constraint on python3-mccabe and
+      python3-setuptools in Depends.
+
+  [ Scott Talbert ]
+  * Update to new upstream release 4.0.1 (Closes: #1002319)
+  * Update d/watch version to 4
+  * Update Standards-Version to 4.6.0 (no changes needed)
+
+ -- Scott Talbert <swt@techie.net>  Fri, 18 Feb 2022 10:20:01 -0500
+
 python-flake8 (3.8.4-1) unstable; urgency=medium
 
   [ Ondřej Nový ]

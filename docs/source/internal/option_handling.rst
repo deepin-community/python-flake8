@@ -41,7 +41,7 @@ three new parameters:
 
 The last two are not specifically for configuration file handling, but they
 do improve that dramatically. We found that there were options that, when
-specified in a configuration file, often necessitated being spit
+specified in a configuration file, often necessitated being split across
 multiple lines and those options were almost always comma-separated. For
 example, let's consider a user's list of ignored error codes for a project:
 
@@ -129,13 +129,8 @@ In |Flake8| 2, configuration file discovery and management was handled by
 pep8.  In pep8's 1.6 release series, it drastically broke how discovery and
 merging worked (as a result of trying to improve it). To avoid a dependency
 breaking |Flake8| again in the future, we have created our own discovery and
-management.
-As part of managing this ourselves, we decided to change management/discovery
-for 3.0.0. We have done the following:
-
-- User files (files stored in a user's home directory or in the XDG directory
-  inside their home directory) are the first files read. For example, if the
-  user has a ``~/.flake8`` file, we will read that first.
+management in 3.0.0. In 4.0.0 we have once again changed how this works and we
+removed support for user-level config files.
 
 - Project files (files stored in the current directory) are read next and
   merged on top of the user file. In other words, configuration in project
@@ -157,51 +152,27 @@ To facilitate the configuration file management, we've taken a different
 approach to discovery and management of files than pep8. In pep8 1.5, 1.6, and
 1.7 configuration discovery and management was centralized in `66 lines of
 very terse python`_ which was confusing and not very explicit. The terseness
-of this function (|Flake8|'s authors believe) caused the confusion and
+of this function (|Flake8| 3.0.0's authors believe) caused the confusion and
 problems with pep8's 1.6 series. As such, |Flake8| has separated out
 discovery, management, and merging into a module to make reasoning about each
 of these pieces easier and more explicit (as well as easier to test).
 
-Configuration file discovery is managed by the
-:class:`~flake8.options.config.ConfigFileFinder` object. This object needs to
-know information about the program's name, any extra arguments passed to it,
-and any configuration files that should be appended to the list of discovered
-files. It provides methods for finding the files and similar methods for
-parsing those fles. For example, it provides
-:meth:`~flake8.options.config.ConfigFileFinder.local_config_files` to find
-known local config files (and append the extra configuration files) and it
-also provides :meth:`~flake8.options.config.ConfigFileFinder.local_configs`
-to parse those configuration files.
+Configuration file discovery and raw ini reading is managed by
+:func:`~flake8.options.config.load_config`.  This produces a loaded
+:class:`~configparser.RawConfigParser` and a config directory (which will be
+used later to normalize paths).
 
-.. note:: ``local_config_files`` also filters out non-existent files.
+Next, :func:`~flake8.options.config.parse_config` parses options using the
+types in the ``OptionManager``.
 
-Configuration file merging and managemnt is controlled by the
-:class:`~flake8.options.config.MergedConfigParser`. This requires the instance
-of :class:`~flake8.options.manager.OptionManager` that the program is using,
-the list of appended config files, and the list of extra arguments. This
-object is currently the sole user of the
-:class:`~flake8.options.config.ConfigFileFinder` object. It appropriately
-initializes the object and uses it in each of
-
-- :meth:`~flake8.options.config.MergedConfigParser.parse_cli_config`
-- :meth:`~flake8.options.config.MergedConfigParser.parse_local_config`
-- :meth:`~flake8.options.config.MergedConfigParser.parse_user_config`
-
-Finally,
-:meth:`~flake8.options.config.MergedConfigParser.merge_user_and_local_config`
-takes the user and local configuration files that are parsed by
-:meth:`~flake8.options.config.MergedConfigParser.parse_local_config` and
-:meth:`~flake8.options.config.MergedConfigParser.parse_user_config`. The
-main usage of the ``MergedConfigParser`` is in
-:func:`~flake8.options.aggregator.aggregate_options`.
+Most of this is done in :func:`~flake8.options.aggregator.aggregate_options`.
 
 Aggregating Configuration File and Command Line Arguments
 ---------------------------------------------------------
 
 :func:`~flake8.options.aggregator.aggregate_options` accepts an instance of
-:class:`~flake8.options.maanger.OptionManager` and does the work to parse the
-command-line arguments passed by the user necessary for creating an instance
-of :class:`~flake8.options.config.MergedConfigParser`.
+:class:`~flake8.options.manager.OptionManager` and does the work to parse the
+command-line arguments.
 
 After parsing the configuration file, we determine the default ignore list. We
 use the defaults from the OptionManager and update those with the parsed
@@ -225,10 +196,6 @@ API Documentation
     :members:
     :special-members:
 
-.. autoclass:: flake8.options.config.ConfigFileFinder
-    :members:
-    :special-members:
+.. autofunction:: flake8.options.config.load_config
 
-.. autoclass:: flake8.options.config.MergedConfigParser
-    :members:
-    :special-members:
+.. autofunction:: flake8.options.config.parse_config
