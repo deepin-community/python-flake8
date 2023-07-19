@@ -1,3 +1,15 @@
+.. image:: https://github.com/PyCQA/flake8/workflows/main/badge.svg
+   :target: https://github.com/PyCQA/flake8/actions?query=workflow%3Amain
+   :alt: build status
+
+.. image:: https://results.pre-commit.ci/badge/github/PyCQA/flake8/main.svg
+   :target: https://results.pre-commit.ci/latest/github/PyCQA/flake8/main
+   :alt: pre-commit.ci status
+
+.. image:: https://img.shields.io/discord/825463413634891776.svg
+   :target: https://discord.gg/qYxpadCgkx
+   :alt: Discord
+
 ========
  Flake8
 ========
@@ -29,14 +41,14 @@ Quickstart
 ==========
 
 See our `quickstart documentation
-<http://flake8.pycqa.org/en/latest/index.html#quickstart>`_ for how to install
+<https://flake8.pycqa.org/en/latest/index.html#quickstart>`_ for how to install
 and get started with Flake8.
 
 
 Frequently Asked Questions
 ==========================
 
-Flake8 maintains an `FAQ <http://flake8.pycqa.org/en/latest/faq.html>`_ in its
+Flake8 maintains an `FAQ <https://flake8.pycqa.org/en/latest/faq.html>`_ in its
 documentation.
 
 
@@ -53,25 +65,25 @@ to suggest, the mailing list would be the best place for it.
 Links
 =====
 
-* `Flake8 Documentation <http://flake8.pycqa.org/en/latest/>`_
+* `Flake8 Documentation <https://flake8.pycqa.org/en/latest/>`_
 
-* `GitLab Project <https://gitlab.com/pycqa/flake8>`_
+* `GitHub Project <https://github.com/pycqa/flake8>`_
 
 * `All (Open and Closed) Issues
-  <https://gitlab.com/pycqa/flake8/issues?scope=all&sort=updated_desc&state=all>`_
+  <https://github.com/pycqa/flake8/issues?q=is%3Aissue>`_
 
 * `Code-Quality Archives
   <https://mail.python.org/mailman/listinfo/code-quality>`_
 
 * `Code of Conduct
-  <http://flake8.pycqa.org/en/latest/internal/contributing.html#code-of-conduct>`_
+  <https://flake8.pycqa.org/en/latest/internal/contributing.html#code-of-conduct>`_
 
 * `Getting Started Contributing
-  <http://flake8.pycqa.org/en/latest/internal/contributing.html>`_
+  <https://flake8.pycqa.org/en/latest/internal/contributing.html>`_
 
 
 Maintenance
 ===========
 
 Flake8 was created by Tarek Ziadé and is currently maintained by `Ian Cordasco
-<http://www.coglib.com/~icordasc/>`_
+<https://www.coglib.com/~icordasc/>`_

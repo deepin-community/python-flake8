@@ -1,44 +1,33 @@
 """Unit tests for the FileChecker class."""
-import mock
+import argparse
+from unittest import mock
+
 import pytest
 
 import flake8
 from flake8 import checker
+from flake8._compat import importlib_metadata
+from flake8.plugins import finder
 
 
-@mock.patch('flake8.processor.FileProcessor')
-def test_run_ast_checks_handles_SyntaxErrors(FileProcessor):  # noqa: N802,N803
-    """Stress our SyntaxError handling.
-
-    Related to: https://gitlab.com/pycqa/flake8/issues/237
-    """
-    processor = mock.Mock(lines=[])
-    FileProcessor.return_value = processor
-    processor.build_ast.side_effect = SyntaxError('Failed to build ast',
-                                                  ('', 1, 5, 'foo(\n'))
-    file_checker = checker.FileChecker(__file__, checks={}, options=object())
-
-    with mock.patch.object(file_checker, 'report') as report:
-        file_checker.run_ast_checks()
-
-        report.assert_called_once_with(
-            'E999', 1, 3,
-            'SyntaxError: Failed to build ast',
-        )
-
-
-@mock.patch('flake8.checker.FileChecker._make_processor', return_value=None)
+@mock.patch("flake8.checker.FileChecker._make_processor", return_value=None)
 def test_repr(*args):
     """Verify we generate a correct repr."""
     file_checker = checker.FileChecker(
-        'example.py', checks={}, options=object(),
+        filename="example.py",
+        plugins=finder.Checkers([], [], []),
+        options=argparse.Namespace(),
     )
-    assert repr(file_checker) == 'FileChecker for example.py'
+    assert repr(file_checker) == "FileChecker for example.py"
 
 
 def test_nonexistent_file():
     """Verify that checking non-existent file results in an error."""
-    c = checker.FileChecker("foobar.py", checks={}, options=object())
+    c = checker.FileChecker(
+        filename="example.py",
+        plugins=finder.Checkers([], [], []),
+        options=argparse.Namespace(),
+    )
 
     assert c.processor is None
     assert not c.should_process
@@ -49,16 +38,26 @@ def test_nonexistent_file():
 
 def test_raises_exception_on_failed_plugin(tmp_path, default_options):
     """Checks that a failing plugin results in PluginExecutionFailed."""
-    foobar = tmp_path / 'foobar.py'
-    foobar.write_text(u"I exist!")  # Create temp file
-    plugin = {
-        "name": "failure",
-        "plugin_name": "failure",  # Both are necessary
-        "parameters": dict(),
-        "plugin": mock.MagicMock(side_effect=ValueError),
-    }
-    """Verify a failing plugin results in an plugin error"""
+    fname = tmp_path.joinpath("t.py")
+    fname.touch()
+    plugin = finder.LoadedPlugin(
+        finder.Plugin(
+            "plugin-name",
+            "1.2.3",
+            importlib_metadata.EntryPoint("X", "dne:dne", "flake8.extension"),
+        ),
+        mock.Mock(side_effect=ValueError),
+        {},
+    )
     fchecker = checker.FileChecker(
-        str(foobar), checks=[], options=default_options)
-    with pytest.raises(flake8.exceptions.PluginExecutionFailed):
+        filename=str(fname),
+        plugins=finder.Checkers([], [], []),
+        options=default_options,
+    )
+    with pytest.raises(flake8.exceptions.PluginExecutionFailed) as excinfo:
         fchecker.run_check(plugin)
+    expected = (
+        f'{fname}: "plugin-name[X]" failed during execution '
+        f"due to ValueError()"
+    )
+    assert str(excinfo.value) == expected
