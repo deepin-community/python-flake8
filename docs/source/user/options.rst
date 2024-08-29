@@ -44,9 +44,9 @@ Index of Options
 
 - :option:`flake8 --count`
 
-- :option:`flake8 --diff`
-
 - :option:`flake8 --exclude`
+
+- :option:`flake8 --extend-exclude`
 
 - :option:`flake8 --filename`
 
@@ -99,10 +99,6 @@ Index of Options
 - :option:`flake8 --builtins`
 
 - :option:`flake8 --doctests`
-
-- :option:`flake8 --include-in-doctest`
-
-- :option:`flake8 --exclude-from-doctest`
 
 - :option:`flake8 --benchmark`
 
@@ -193,7 +189,7 @@ Options and their Descriptions
 
     Possible options are ``auto``, ``always``, and ``never``.
 
-    This **can** be specified in config files.
+    This **can not** be specified in config files.
 
     When color is enabled, the following substitutions are enabled:
 
@@ -207,12 +203,6 @@ Options and their Descriptions
     - ``%(cyan)s``
     - ``%(white)s``
     - ``%(reset)s``
-
-    Example config file usage:
-
-    .. code-block:: ini
-
-        color = never
 
 
 .. option:: --count
@@ -234,27 +224,6 @@ Options and their Descriptions
     .. code-block:: ini
 
         count = True
-
-
-.. option:: --diff
-
-    :ref:`Go back to index <top>`
-
-    .. warning::
-
-        Due to hiding potential errors, this option is deprecated and will be
-        removed in a future version.
-
-    Use the unified diff provided on standard in to only check the modified
-    files and report errors included in the diff.
-
-    Command-line example:
-
-    .. prompt:: bash
-
-        git diff -u | flake8 --diff
-
-    This **can not** be specified in config files.
 
 
 .. option:: --exclude=<patterns>
@@ -636,12 +605,13 @@ Options and their Descriptions
 
     :ref:`Go back to index <top>`
 
+    **You usually do not need to specify this option as the default includes
+    all installed plugin codes.**
+
     Specify the list of error codes you wish |Flake8| to report. Similarly to
     :option:`--ignore`. You can specify a portion of an error code to get all
     that start with that string. For example, you can use ``E``, ``E4``,
     ``E43``, and ``E431``.
-
-    This defaults to: ``E,F,W,C90``
 
     Command-line example:
 
@@ -677,6 +647,9 @@ Options and their Descriptions
     :ref:`Go back to index <top>`
 
     .. versionadded:: 4.0.0
+
+    **You usually do not need to specify this option as the default includes
+    all installed plugin codes.**
 
     Specify a list of codes to add to the list of selected ones. Similar
     considerations as in :option:`--select` apply here with regard to the
@@ -800,11 +773,13 @@ Options and their Descriptions
             flake8-typing-extensions
 
 
+.. _option-enable-extensions:
+
 .. option:: --enable-extensions=<errors>
 
     :ref:`Go back to index <top>`
 
-    Enable off-by-default extensions.
+    Enable :ref:`off-by-default<off-by-default>` extensions.
 
     Plugins to |Flake8| have the option of registering themselves as
     off-by-default. These plugins will not be loaded unless enabled by this
@@ -1018,62 +993,6 @@ Options and their Descriptions
     .. code-block:: ini
 
         doctests = True
-
-
-.. option:: --include-in-doctest=<paths>
-
-    :ref:`Go back to index <top>`
-
-    Specify which files are checked by PyFlakes for doctest syntax.
-
-    This is registered by the default PyFlakes plugin.
-
-    Command-line example:
-
-    .. prompt:: bash
-
-        flake8 --include-in-doctest=dir/subdir/file.py,dir/other/file.py dir/
-
-    This **can** be specified in config files.
-
-    Example config file usage:
-
-    .. code-block:: ini
-
-        include-in-doctest =
-            dir/subdir/file.py,
-            dir/other/file.py
-        include_in_doctest =
-            dir/subdir/file.py,
-            dir/other/file.py
-
-
-.. option:: --exclude-from-doctest=<paths>
-
-    :ref:`Go back to index <top>`
-
-    Specify which files are not to be checked by PyFlakes for doctest syntax.
-
-    This is registered by the default PyFlakes plugin.
-
-    Command-line example:
-
-    .. prompt:: bash
-
-        flake8 --exclude-from-doctest=dir/subdir/file.py,dir/other/file.py dir/
-
-    This **can** be specified in config files.
-
-    Example config file usage:
-
-    .. code-block:: ini
-
-        exclude-from-doctest =
-            dir/subdir/file.py,
-            dir/other/file.py
-        exclude_from_doctest =
-            dir/subdir/file.py,
-            dir/other/file.py
 
 
 .. option:: --benchmark

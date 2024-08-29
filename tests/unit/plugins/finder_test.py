@@ -1,10 +1,12 @@
+from __future__ import annotations
+
 import configparser
+import importlib.metadata
 import sys
 from unittest import mock
 
 import pytest
 
-from flake8._compat import importlib_metadata
 from flake8.exceptions import ExecutionError
 from flake8.exceptions import FailedToLoadPlugin
 from flake8.plugins import finder
@@ -12,7 +14,7 @@ from flake8.plugins.pyflakes import FlakesChecker
 
 
 def _ep(name="X", value="dne:dne", group="flake8.extension"):
-    return importlib_metadata.EntryPoint(name, value, group)
+    return importlib.metadata.EntryPoint(name, value, group)
 
 
 def _plugin(package="local", version="local", ep=None):
@@ -27,37 +29,6 @@ def _loaded(plugin=None, obj=None, parameters=None):
     if parameters is None:
         parameters = {"tree": True}
     return finder.LoadedPlugin(plugin, obj, parameters)
-
-
-@pytest.mark.parametrize(
-    "s",
-    (
-        "E",
-        "E1",
-        "E123",
-        "ABC",
-        "ABC1",
-        "ABC123",
-    ),
-)
-def test_valid_plugin_prefixes(s):
-    assert finder.VALID_CODE.match(s)
-
-
-@pytest.mark.parametrize(
-    "s",
-    (
-        "",
-        "A1234",
-        "ABCD",
-        "abc",
-        "a-b",
-        "☃",
-        "A𝟗",
-    ),
-)
-def test_invalid_plugin_prefixes(s):
-    assert finder.VALID_CODE.match(s) is None
 
 
 def test_loaded_plugin_entry_name_vs_display_name():
@@ -120,7 +91,7 @@ Version: 9000.1.0
     d = tmp_path.joinpath("pyflakes.dist-info")
     d.mkdir()
     d.joinpath("METADATA").write_text(metadata)
-    return importlib_metadata.PathDistribution(d)
+    return importlib.metadata.PathDistribution(d)
 
 
 @pytest.fixture
@@ -133,7 +104,7 @@ Version: 9000.2.0
     d = tmp_path.joinpath("pycodestyle.dist-info")
     d.mkdir()
     d.joinpath("METADATA").write_text(metadata)
-    return importlib_metadata.PathDistribution(d)
+    return importlib.metadata.PathDistribution(d)
 
 
 @pytest.fixture
@@ -160,7 +131,7 @@ pylint = flake8.formatting.default:Pylint
     d.mkdir()
     d.joinpath("METADATA").write_text(metadata)
     d.joinpath("entry_points.txt").write_text(entry_points)
-    return importlib_metadata.PathDistribution(d)
+    return importlib.metadata.PathDistribution(d)
 
 
 @pytest.fixture
@@ -182,13 +153,13 @@ foo = flake8_foo:Formatter
     d.mkdir()
     d.joinpath("METADATA").write_text(metadata)
     d.joinpath("entry_points.txt").write_text(eps)
-    return importlib_metadata.PathDistribution(d)
+    return importlib.metadata.PathDistribution(d)
 
 
 @pytest.fixture
 def mock_distribution(pyflakes_dist, pycodestyle_dist):
     dists = {"pyflakes": pyflakes_dist, "pycodestyle": pycodestyle_dist}
-    with mock.patch.object(importlib_metadata, "distribution", dists.get):
+    with mock.patch.object(importlib.metadata, "distribution", dists.get):
         yield
 
 
@@ -201,7 +172,7 @@ def test_flake8_plugins(flake8_dist, mock_distribution):
         finder.Plugin(
             "pyflakes",
             "9000.1.0",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "F",
                 "flake8.plugins.pyflakes:FlakesChecker",
                 "flake8.extension",
@@ -210,7 +181,7 @@ def test_flake8_plugins(flake8_dist, mock_distribution):
         finder.Plugin(
             "pycodestyle",
             "9000.2.0",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "E",
                 "flake8.plugins.pycodestyle:pycodestyle_logical",
                 "flake8.extension",
@@ -219,7 +190,7 @@ def test_flake8_plugins(flake8_dist, mock_distribution):
         finder.Plugin(
             "pycodestyle",
             "9000.2.0",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "W",
                 "flake8.plugins.pycodestyle:pycodestyle_physical",
                 "flake8.extension",
@@ -228,14 +199,14 @@ def test_flake8_plugins(flake8_dist, mock_distribution):
         finder.Plugin(
             "flake8",
             "9001",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "default", "flake8.formatting.default:Default", "flake8.report"
             ),
         ),
         finder.Plugin(
             "flake8",
             "9001",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "pylint", "flake8.formatting.default:Pylint", "flake8.report"
             ),
         ),
@@ -249,7 +220,7 @@ def test_importlib_plugins(
     mock_distribution,
     caplog,
 ):
-    """Ensure we can load plugins from importlib_metadata."""
+    """Ensure we can load plugins from importlib.metadata."""
 
     # make sure flake8-colors is skipped
     flake8_colors_metadata = """\
@@ -265,7 +236,7 @@ flake8-colors = flake8_colors:ColorFormatter
     flake8_colors_d.mkdir()
     flake8_colors_d.joinpath("METADATA").write_text(flake8_colors_metadata)
     flake8_colors_d.joinpath("entry_points.txt").write_text(flake8_colors_eps)
-    flake8_colors_dist = importlib_metadata.PathDistribution(flake8_colors_d)
+    flake8_colors_dist = importlib.metadata.PathDistribution(flake8_colors_d)
 
     unrelated_metadata = """\
 Metadata-Version: 2.1
@@ -280,10 +251,10 @@ unrelated = unrelated:main
     unrelated_d.mkdir()
     unrelated_d.joinpath("METADATA").write_text(unrelated_metadata)
     unrelated_d.joinpath("entry_points.txt").write_text(unrelated_eps)
-    unrelated_dist = importlib_metadata.PathDistribution(unrelated_d)
+    unrelated_dist = importlib.metadata.PathDistribution(unrelated_d)
 
     with mock.patch.object(
-        importlib_metadata,
+        importlib.metadata,
         "distributions",
         return_value=[
             flake8_dist,
@@ -298,14 +269,14 @@ unrelated = unrelated:main
         finder.Plugin(
             "flake8-foo",
             "1.2.3",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "Q", "flake8_foo:Plugin", "flake8.extension"
             ),
         ),
         finder.Plugin(
             "pycodestyle",
             "9000.2.0",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "E",
                 "flake8.plugins.pycodestyle:pycodestyle_logical",
                 "flake8.extension",
@@ -314,7 +285,7 @@ unrelated = unrelated:main
         finder.Plugin(
             "pycodestyle",
             "9000.2.0",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "W",
                 "flake8.plugins.pycodestyle:pycodestyle_physical",
                 "flake8.extension",
@@ -323,7 +294,7 @@ unrelated = unrelated:main
         finder.Plugin(
             "pyflakes",
             "9000.1.0",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "F",
                 "flake8.plugins.pyflakes:FlakesChecker",
                 "flake8.extension",
@@ -332,21 +303,21 @@ unrelated = unrelated:main
         finder.Plugin(
             "flake8",
             "9001",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "default", "flake8.formatting.default:Default", "flake8.report"
             ),
         ),
         finder.Plugin(
             "flake8",
             "9001",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "pylint", "flake8.formatting.default:Pylint", "flake8.report"
             ),
         ),
         finder.Plugin(
             "flake8-foo",
             "1.2.3",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "foo", "flake8_foo:Formatter", "flake8.report"
             ),
         ),
@@ -365,7 +336,7 @@ def test_duplicate_dists(flake8_dist):
     # some poorly packaged pythons put lib and lib64 on sys.path resulting in
     # duplicates from `importlib.metadata.distributions`
     with mock.patch.object(
-        importlib_metadata,
+        importlib.metadata,
         "distributions",
         return_value=[
             flake8_dist,
@@ -398,7 +369,7 @@ def test_find_local_plugins(local_plugin_cfg):
         finder.Plugin(
             "local",
             "local",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "X",
                 "mod:attr",
                 "flake8.extension",
@@ -407,7 +378,7 @@ def test_find_local_plugins(local_plugin_cfg):
         finder.Plugin(
             "local",
             "local",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "Y",
                 "mod2:attr",
                 "flake8.extension",
@@ -416,7 +387,7 @@ def test_find_local_plugins(local_plugin_cfg):
         finder.Plugin(
             "local",
             "local",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "Z",
                 "mod3:attr",
                 "flake8.report",
@@ -503,7 +474,7 @@ def test_find_plugins(
 ):
     opts = finder.PluginOptions.blank()
     with mock.patch.object(
-        importlib_metadata,
+        importlib.metadata,
         "distributions",
         return_value=[flake8_dist, flake8_foo_dist],
     ):
@@ -513,52 +484,52 @@ def test_find_plugins(
         finder.Plugin(
             "flake8",
             "9001",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "default", "flake8.formatting.default:Default", "flake8.report"
             ),
         ),
         finder.Plugin(
             "flake8",
             "9001",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "pylint", "flake8.formatting.default:Pylint", "flake8.report"
             ),
         ),
         finder.Plugin(
             "flake8-foo",
             "1.2.3",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "Q", "flake8_foo:Plugin", "flake8.extension"
             ),
         ),
         finder.Plugin(
             "flake8-foo",
             "1.2.3",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "foo", "flake8_foo:Formatter", "flake8.report"
             ),
         ),
         finder.Plugin(
             "local",
             "local",
-            importlib_metadata.EntryPoint("X", "mod:attr", "flake8.extension"),
+            importlib.metadata.EntryPoint("X", "mod:attr", "flake8.extension"),
         ),
         finder.Plugin(
             "local",
             "local",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "Y", "mod2:attr", "flake8.extension"
             ),
         ),
         finder.Plugin(
             "local",
             "local",
-            importlib_metadata.EntryPoint("Z", "mod3:attr", "flake8.report"),
+            importlib.metadata.EntryPoint("Z", "mod3:attr", "flake8.report"),
         ),
         finder.Plugin(
             "pycodestyle",
             "9000.2.0",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "E",
                 "flake8.plugins.pycodestyle:pycodestyle_logical",
                 "flake8.extension",
@@ -567,7 +538,7 @@ def test_find_plugins(
         finder.Plugin(
             "pycodestyle",
             "9000.2.0",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "W",
                 "flake8.plugins.pycodestyle:pycodestyle_physical",
                 "flake8.extension",
@@ -576,7 +547,7 @@ def test_find_plugins(
         finder.Plugin(
             "pyflakes",
             "9000.1.0",
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 "F",
                 "flake8.plugins.pyflakes:FlakesChecker",
                 "flake8.extension",
@@ -599,7 +570,7 @@ def test_find_plugins_plugin_is_present(flake8_foo_dist):
     )
 
     with mock.patch.object(
-        importlib_metadata,
+        importlib.metadata,
         "distributions",
         return_value=[flake8_foo_dist],
     ):
@@ -622,7 +593,7 @@ def test_find_plugins_plugin_is_missing(flake8_dist, flake8_foo_dist):
     )
 
     with mock.patch.object(
-        importlib_metadata,
+        importlib.metadata,
         "distributions",
         return_value=[flake8_dist],
     ):
@@ -652,7 +623,7 @@ def test_find_plugins_name_normalization(flake8_foo_dist):
     )
 
     with mock.patch.object(
-        importlib_metadata,
+        importlib.metadata,
         "distributions",
         return_value=[flake8_foo_dist],
     ):
@@ -714,7 +685,7 @@ def test_load_plugin_ok():
     assert loaded == finder.LoadedPlugin(
         plugin,
         FlakesChecker,
-        {"tree": True, "file_tokens": True, "filename": True},
+        {"tree": True, "filename": True},
     )
 
 
