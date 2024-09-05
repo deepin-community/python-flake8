@@ -9,15 +9,15 @@ This module
 .. autofunction:: flake8.configure_logging
 
 """
+from __future__ import annotations
+
 import logging
 import sys
-from typing import Optional
-from typing import Type
 
 LOG = logging.getLogger(__name__)
 LOG.addHandler(logging.NullHandler())
 
-__version__ = "5.0.4"
+__version__ = "7.1.1"
 __version_info__ = tuple(int(i) for i in __version__.split(".") if i.isdigit())
 
 _VERBOSITY_TO_LOG_LEVEL = {
@@ -35,7 +35,7 @@ LOG_FORMAT = (
 
 def configure_logging(
     verbosity: int,
-    filename: Optional[str] = None,
+    filename: str | None = None,
     logformat: str = LOG_FORMAT,
 ) -> None:
     """Configure logging for flake8.
@@ -56,7 +56,7 @@ def configure_logging(
 
     if not filename or filename in ("stderr", "stdout"):
         fileobj = getattr(sys, filename or "stderr")
-        handler_cls: Type[logging.Handler] = logging.StreamHandler
+        handler_cls: type[logging.Handler] = logging.StreamHandler
     else:
         fileobj = filename
         handler_cls = logging.FileHandler

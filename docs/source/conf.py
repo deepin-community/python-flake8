@@ -14,6 +14,8 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 # sys.path.insert(0, os.path.abspath('.'))
+from __future__ import annotations
+
 import flake8
 
 # -- General configuration ------------------------------------------------
@@ -32,7 +34,7 @@ extensions = [
     "sphinx.ext.todo",
     "sphinx.ext.coverage",
     "sphinx.ext.viewcode",
-    "sphinx-prompt",
+    "sphinx_prompt",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -294,7 +296,11 @@ texinfo_documents = [
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {"python": ("https://docs.python.org/3/", None)}
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3/", None),
+    "packaging": ("https://packaging.python.org/en/latest/", None),
+    "setuptools": ("https://setuptools.pypa.io/en/latest/", None),
+}
 
 extlinks = {
     "issue": ("https://github.com/pycqa/flake8/issues/%s", "#%s"),

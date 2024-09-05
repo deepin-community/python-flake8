@@ -28,9 +28,9 @@ Historically, |Flake8| has generated major releases for:
 
 - Unvendoring dependencies (2.0)
 
-- Large scale refactoring (2.0, 3.0, 5.0)
+- Large scale refactoring (2.0, 3.0, 5.0, 6.0)
 
-- Subtly breaking CLI changes (3.0, 4.0, 5.0)
+- Subtly breaking CLI changes (3.0, 4.0, 5.0, 6.0, 7.0)
 
 - Breaking changes to its plugin interface (3.0)
 
@@ -81,9 +81,9 @@ for users.
 
 Before releasing, the following tox test environments must pass:
 
-- Python 3.6 (a.k.a., ``tox -e py36``)
+- Python 3.8 (a.k.a., ``tox -e py38``)
 
-- Python 3.7 (a.k.a., ``tox -e py37``)
+- Python 3.12 (a.k.a., ``tox -e py312``)
 
 - PyPy 3 (a.k.a., ``tox -e pypy3``)
 

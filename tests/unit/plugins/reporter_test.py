@@ -1,15 +1,17 @@
+from __future__ import annotations
+
 import argparse
+import importlib.metadata
 
 import pytest
 
-from flake8._compat import importlib_metadata
 from flake8.formatting import default
 from flake8.plugins import finder
 from flake8.plugins import reporter
 
 
 def _opts(**kwargs):
-    kwargs.setdefault("quiet", 0),
+    kwargs.setdefault("quiet", 0)
     kwargs.setdefault("color", "never")
     kwargs.setdefault("output_file", None)
     return argparse.Namespace(**kwargs)
@@ -22,7 +24,7 @@ def reporters():
             finder.Plugin(
                 "flake8",
                 "123",
-                importlib_metadata.EntryPoint(
+                importlib.metadata.EntryPoint(
                     name, f"{cls.__module__}:{cls.__name__}", "flake8.report"
                 ),
             ),

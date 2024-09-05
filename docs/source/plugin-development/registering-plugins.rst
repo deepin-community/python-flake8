@@ -12,16 +12,17 @@ To register any kind of plugin with |Flake8|, you need:
 
 #. A name for your plugin that will (ideally) be unique.
 
-#. A somewhat recent version of setuptools (newer than 0.7.0 but preferably as
-   recent as you can attain).
-
-|Flake8| relies on functionality provided by setuptools called
-`Entry Points`_. These allow any package to register a plugin with |Flake8|
-via that package's ``setup.py`` file.
+|Flake8| relies on functionality provided by build tools called
+:external+packaging:doc:`entry points<specifications/entry-points>`. These
+allow any package to register a plugin with |Flake8| via that package's
+metadata.
 
 Let's presume that we already have our plugin written and it's in a module
-called ``flake8_example``. We might have a ``setup.py`` that looks something
-like:
+called ``flake8_example``. We will also assume ``setuptools`` is used as a
+:external+packaging:term:`Build Backend`, but be aware that most backends
+support entry points.
+
+We might have a ``setup.py`` that looks something like:
 
 .. code-block:: python
 
@@ -120,7 +121,7 @@ it would look like::
 
     X10 = flake8_example:ExamplePlugin
 
-In this casae as well as the following case, your entry-point name acts as
+In this case as well as the following case, your entry-point name acts as
 a prefix to the error codes produced by your plugin.
 
 If all of your plugin's error codes start with ``X1`` then it would look
@@ -143,6 +144,14 @@ i.e., ``ABC`` is better than ``A`` but ``ABCD`` is invalid.
 *A 3 letters entry point prefix followed by 3 numbers (i.e.* ``ABC123`` *)
 is currently the longest allowed entry point name.*
 
+.. _off-by-default:
 
-.. _Entry Points:
-    https://setuptools.readthedocs.io/en/latest/pkg_resources.html#entry-points
+If your plugin is intended to be opt-in, it can set the attribute
+``off_by_default = True``. Users of your plugin will then need to utilize
+:ref:`enable-extensions<option-enable-extensions>` with your plugin's entry
+point.
+
+.. seealso::
+
+    The :external+setuptools:doc:`setuptools user guide <userguide/entry_point>`
+    about entry points.
